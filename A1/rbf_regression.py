@@ -1,8 +1,33 @@
+"""
+CSCC11 - Introduction to Machine Learning, Fall 2020, Assignment 1
+B. Chan, S. Wei, D. Fleet
+
+===========================================================
+
+ COMPLETE THIS TEXT BOX:
+
+ Student Name: Simon Ha
+ Student number: 1004929116
+ UtorID: hasimon
+
+ I hereby certify that the work contained here is my own
+
+
+ _____Simon Ha___________
+ (sign with your name)
+
+===========================================================
+"""
+
 import numpy as np
 
 class RBFRegression():
     def __init__(self, centers, widths):
         """ This class represents a radial basis function regression model.
+
+        TODO: You will need to implement the methods of this class:
+        - predict(X): ndarray -> ndarray
+        - fit_with_l2_regularization(train_X, train_Y, l2_coef): ndarray, float -> None
 
         Args:
         - centers (ndarray (Shape: (K, 2))): A Kx2 matrix corresponding to the 
@@ -47,14 +72,23 @@ class RBFRegression():
     def predict(self, X):
         """ This method predicts the output of the given input data using the model parameters.
 
+        TODO: You will need to implement the above function and handle multiple 2D inputs,
+              formatted as a Nx2 matrix.
+        
+        NOTE: You must not iterate through inputs.
+        
         Args:
         - X (ndarray (Shape: (N, 2))): A Nx2 matrix consisting N 2D input data.
 
         Output:
         - ndarray (shape: (N, 1)): A N-column vector consisting N scalar output data.
+
+        ASIDE: Do you see a way to do this without any loop at all?
         """
         assert X.shape[1] == 2, f"Each input should contain two components. Got: {X.shape[1]}"
 
+        # ====================================================
+        # TODO: Implement your solution within the box
         N = X.shape[0]
         B = np.empty(shape=(N, self.K+1), dtype=np.float)
         ones = np.ones(shape=(N, 1))
@@ -65,9 +99,14 @@ class RBFRegression():
         B = np.column_stack((ones, b))
         return B @ self.parameters
 
+        # ====================================================
     
     def fit_with_l2_regularization(self, train_X, train_Y, l2_coef):
         """ This method fits the model parameters, given the training inputs and outputs.
+
+        TODO: You will need to replace self.parameters to the optimal parameters. 
+        
+        NOTE: Do not forget that we are using radial basis functions!
 
         Args:
         - train_X (ndarray (shape: (N, 2))): A Nx2 matrix consisting N 2D training inputs.
@@ -78,6 +117,8 @@ class RBFRegression():
         assert train_X.shape[1] == 2, f"Each input should contain two components. Got: {train_X.shape[1]}"
         assert train_Y.shape[1] == 1, f"Each output should contain 1 component. Got: {train_Y.shape[1]}"
 
+        # ====================================================
+        # TODO: Implement your solution within the box
         N = train_X.shape[0]
         B = np.empty(shape=(N, self.K+1), dtype=np.float)
         ones = np.ones(shape=(N, 1))
@@ -90,11 +131,14 @@ class RBFRegression():
         p1 = np.linalg.inv((B.T @ B) + (l2_coef * p2))
         p3 = B.T @ train_Y
         self.parameters = p1 @ p3
+        # ====================================================
 
         assert self.parameters.shape == (self.K + 1, 1)
 
 
 if __name__ == "__main__":
+    # You can use linear regression to check whether your implementation is correct.
+    # NOTE: This is just a quick check but does not cover all cases.
     centers = np.tile(np.expand_dims(np.arange(2), axis=1), reps=(1, 2))
     widths = np.ones((2, 1))
     model = RBFRegression(centers, widths)
